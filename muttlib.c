@@ -1484,9 +1484,9 @@ char *mutt_apply_replace (char *d, size_t dlen, char *s, REPLACE_LIST *rlist)
                   mutt_b2s (srcbuf), l->rx->pattern));
 
       mutt_buffer_clear (destbuf);
-      if (l->template)
+      if (l->template_str)
       {
-        for (p = l->template; *p; )
+        for (p = l->template_str; *p; )
         {
 	  if (*p == '%')
 	  {
@@ -2322,7 +2322,7 @@ void mutt_free_replace_list (REPLACE_LIST **list)
     p = *list;
     *list = (*list)->next;
     mutt_free_regexp (&p->rx);
-    FREE (&p->template);
+    FREE (&p->template_str);
     FREE (&p);
   }
 }
@@ -2375,7 +2375,7 @@ int mutt_match_spam_list (const char *s, REPLACE_LIST *l, char *text, int textsi
       dprint (5, (debugfile, "mutt_match_spam_list: %d subs\n", (int)l->rx->rx->re_nsub));
 
       /* Copy template into text, with substitutions. */
-      for (p = l->template; *p && tlen < textsize - 1;)
+      for (p = l->template_str; *p && tlen < textsize - 1;)
       {
 	/* backreference to pattern match substring, eg. %1, %2, etc) */
 	if (*p == '%')

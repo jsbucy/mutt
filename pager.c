@@ -1889,7 +1889,7 @@ static void pager_menu_redraw (MUTTMENU *pager_menu)
         rd->index->make_entry = index_make_entry;
         rd->index->color = index_color;
         rd->index->max = Context->vcount;
-        rd->index->current = rd->extra->hdr->virtual;
+        rd->index->current = rd->extra->hdr->virtual_msgno;
         rd->index->indexwin = rd->index_window;
         rd->index->statuswin = rd->index_status_window;
       }

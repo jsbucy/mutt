@@ -542,7 +542,7 @@ static int add_to_replace_list (REPLACE_LIST **list, const char *pat, const char
        * the template, and leaving t pointed at the current item.
        */
       t = last;
-      FREE(&t->template);
+      FREE(&t->template_str);
       break;
     }
     if (!last->next)
@@ -563,7 +563,7 @@ static int add_to_replace_list (REPLACE_LIST **list, const char *pat, const char
   }
 
   /* Now t is the REPLACE_LIST* that we want to modify. It is prepared. */
-  t->template = safe_strdup(templ);
+  t->template_str = safe_strdup(templ);
 
   /* Find highest match number in template string */
   t->nmatch = 0;
@@ -607,7 +607,7 @@ static int remove_from_replace_list (REPLACE_LIST **list, const char *pat)
   {
     *list = cur->next;
     mutt_free_regexp(&cur->rx);
-    FREE(&cur->template);
+    FREE(&cur->template_str);
     FREE(&cur);
     return 1;
   }
@@ -619,7 +619,7 @@ static int remove_from_replace_list (REPLACE_LIST **list, const char *pat)
     {
       prev->next = cur->next;
       mutt_free_regexp(&cur->rx);
-      FREE(&cur->template);
+      FREE(&cur->template_str);
       FREE(&cur);
       cur = prev->next;
       ++nremoved;

@@ -27,7 +27,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define VISIBLE(hdr, ctx) (hdr->virtual >= 0 || (hdr->collapsed && (!ctx->pattern || hdr->limited)))
+#define VISIBLE(hdr, ctx) (hdr->virtual_msgno >= 0 || (hdr->collapsed && (!ctx->pattern || hdr->limited)))
 
 /* determine whether a is a descendant of b */
 static int is_descendant (THREAD *a, THREAD *b)
@@ -1156,7 +1156,7 @@ static HEADER *find_virtual (THREAD *cur, int reverse)
 {
   THREAD *top;
 
-  if (cur->message && cur->message->virtual >= 0)
+  if (cur->message && cur->message->virtual_msgno >= 0)
     return (cur->message);
 
   top = cur;
@@ -1168,7 +1168,7 @@ static HEADER *find_virtual (THREAD *cur, int reverse)
 
   FOREVER
   {
-    if (cur->message && cur->message->virtual >= 0)
+    if (cur->message && cur->message->virtual_msgno >= 0)
       return (cur->message);
 
     if (cur->child)

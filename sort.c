@@ -333,9 +333,9 @@ void mutt_sort_headers (CONTEXT *ctx, int init)
   for (i = 0; i < ctx->msgcount; i++)
   {
     HEADER *cur = ctx->hdrs[i];
-    if (cur->virtual != -1 || (cur->collapsed && (!ctx->pattern || cur->limited)))
+    if (cur->virtual_msgno != -1 || (cur->collapsed && (!ctx->pattern || cur->limited)))
     {
-      cur->virtual = ctx->vcount;
+      cur->virtual_msgno = ctx->vcount;
       ctx->v2r[ctx->vcount] = i;
       ctx->vcount++;
     }

@@ -682,7 +682,7 @@ typedef struct replace_list_t
 {
   REGEXP *rx;
   int     nmatch;
-  char   *template;
+  char   *template_str;
   struct replace_list_t *next;
 } REPLACE_LIST;
 
@@ -934,7 +934,7 @@ typedef struct header
   int lines;			/* how many lines in the body of this message? */
   int index;			/* the absolute (unsorted) message number */
   int msgno;			/* number displayed to the user */
-  int virtual;			/* virtual message number */
+  int virtual_msgno;			/* virtual message number */
   int score;
   ENVELOPE *env;		/* envelope information */
   BODY *content;		/* list of MIME parts */
