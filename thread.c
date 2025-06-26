@@ -1152,7 +1152,7 @@ void mutt_sort_threads (CONTEXT *ctx, int init)
   }
 }
 
-static HEADER *find_virtual (THREAD *cur, int reverse)
+static HEADER *find_virtual_msgno (THREAD *cur, int reverse)
 {
   THREAD *top;
 
@@ -1205,7 +1205,7 @@ int _mutt_aside_thread (HEADER *hdr, short dir, short subthreads)
   if ((Sort & SORT_MASK) != SORT_THREADS)
   {
     mutt_error _("Threading is not enabled.");
-    return (hdr->virtual);
+    return (hdr->virtual_msgno);
   }
 
   cur = hdr->thread;
@@ -1236,7 +1236,7 @@ int _mutt_aside_thread (HEADER *hdr, short dir, short subthreads)
       cur = cur->next;
       if (!cur)
 	return (-1);
-      tmp = find_virtual (cur, 0);
+      tmp = find_virtual_msgno (cur, 0);
     } while (!tmp);
   }
   else
@@ -1246,11 +1246,11 @@ int _mutt_aside_thread (HEADER *hdr, short dir, short subthreads)
       cur = cur->prev;
       if (!cur)
 	return (-1);
-      tmp = find_virtual (cur, 1);
+      tmp = find_virtual_msgno (cur, 1);
     } while (!tmp);
   }
 
-  return (tmp->virtual);
+  return (tmp->virtual_msgno);
 }
 
 int mutt_parent_message (CONTEXT *ctx, HEADER *hdr, int find_root)
@@ -1261,7 +1261,7 @@ int mutt_parent_message (CONTEXT *ctx, HEADER *hdr, int find_root)
   if ((Sort & SORT_MASK) != SORT_THREADS)
   {
     mutt_error _("Threading is not enabled.");
-    return (hdr->virtual);
+    return (hdr->virtual_msgno);
   }
 
   /* Root may be the current message */
@@ -1291,10 +1291,10 @@ int mutt_parent_message (CONTEXT *ctx, HEADER *hdr, int find_root)
       mutt_error _("Parent message is not visible in this limited view.");
     return (-1);
   }
-  return (parent->virtual);
+  return (parent->virtual_msgno);
 }
 
-void mutt_set_virtual (CONTEXT *ctx)
+void mutt_set_virtual_msgno (CONTEXT *ctx)
 {
   int i, padding;
   HEADER *cur;
@@ -1306,9 +1306,9 @@ void mutt_set_virtual (CONTEXT *ctx)
   for (i = 0; i < ctx->msgcount; i++)
   {
     cur = ctx->hdrs[i];
-    if (cur->virtual >= 0)
+    if (cur->virtual_msgno >= 0)
     {
-      cur->virtual = ctx->vcount;
+      cur->virtual_msgno = ctx->vcount;
       ctx->v2r[ctx->vcount] = i;
       ctx->vcount++;
       ctx->vsize += cur->content->length + cur->content->offset -
@@ -1323,16 +1323,16 @@ int _mutt_traverse_thread (CONTEXT *ctx, HEADER *cur, int flag)
   HEADER *roothdr = NULL;
   int final;
   int num_hidden = 0, new = 0, old = 0;
-  int min_unread_msgno = INT_MAX, min_unread = cur->virtual;
+  int min_unread_msgno = INT_MAX, min_unread = cur->virtual_msgno;
 #define CHECK_LIMIT (!ctx->pattern || cur->limited)
 
   if ((Sort & SORT_MASK) != SORT_THREADS)
   {
     mutt_error (_("Threading is not enabled."));
-    return (cur->virtual);
+    return (cur->virtual_msgno);
   }
 
-  final = cur->virtual;
+  final = cur->virtual_msgno;
   thread = cur->thread;
   while (thread->parent)
     thread = thread->parent;
@@ -1349,23 +1349,23 @@ int _mutt_traverse_thread (CONTEXT *ctx, HEADER *cur, int flag)
       new = 1;
     if (cur->msgno < min_unread_msgno)
     {
-      min_unread = cur->virtual;
+      min_unread = cur->virtual_msgno;
       min_unread_msgno = cur->msgno;
     }
   }
 
-  if (cur->virtual == -1 && CHECK_LIMIT)
+  if (cur->virtual_msgno == -1 && CHECK_LIMIT)
     num_hidden++;
 
   if (flag & (MUTT_THREAD_COLLAPSE | MUTT_THREAD_UNCOLLAPSE))
   {
     cur->color.pair = cur->color.attrs = 0; /* force index entry's color to be re-evaluated */
     cur->collapsed = flag & MUTT_THREAD_COLLAPSE;
-    if (cur->virtual != -1)
+    if (cur->virtual_msgno != -1)
     {
       roothdr = cur;
       if (flag & MUTT_THREAD_COLLAPSE)
-	final = roothdr->virtual;
+	final = roothdr->virtual_msgno;
     }
   }
 
@@ -1397,18 +1397,18 @@ int _mutt_traverse_thread (CONTEXT *ctx, HEADER *cur, int flag)
 	{
 	  roothdr = cur;
 	  if (flag & MUTT_THREAD_COLLAPSE)
-	    final = roothdr->virtual;
+	    final = roothdr->virtual_msgno;
 	}
 
 	if (flag & MUTT_THREAD_COLLAPSE)
 	{
 	  if (cur != roothdr)
-	    cur->virtual = -1;
+	    cur->virtual_msgno = -1;
 	}
 	else
 	{
 	  if (CHECK_LIMIT)
-	    cur->virtual = cur->msgno;
+	    cur->virtual_msgno = cur->msgno;
 	}
       }
 
@@ -1421,12 +1421,12 @@ int _mutt_traverse_thread (CONTEXT *ctx, HEADER *cur, int flag)
 	  new = 1;
 	if (cur->msgno < min_unread_msgno)
 	{
-	  min_unread = cur->virtual;
+	  min_unread = cur->virtual_msgno;
 	  min_unread_msgno = cur->msgno;
 	}
       }
 
-      if (cur->virtual == -1 && CHECK_LIMIT)
+      if (cur->virtual_msgno == -1 && CHECK_LIMIT)
 	num_hidden++;
     }
 
