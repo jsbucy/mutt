@@ -356,7 +356,7 @@ void mutt_sort_headers (CONTEXT *ctx, int init)
 	mutt_collapse_thread (ctx, h);
       top = top->next;
     }
-    mutt_set_virtual (ctx);
+    mutt_set_virtual_msg_num (ctx);
   }
 
   if (!ctx->quiet)

@@ -418,7 +418,7 @@ static void update_index_threaded (CONTEXT *ctx, int check, int oldcount)
 			     MUTT_MATCH_FULL_ADDRESS,
 			     ctx, h, NULL))
       {
-        /* virtual_msg_num will get properly set by mutt_set_virtual(), which
+        /* virtual_msg_num will get properly set by mutt_set_virtual_msg_num(), which
          * is called by mutt_sort_headers() just below. */
         h->virtual_msg_num = 1;
         h->limited = 1;
@@ -443,14 +443,14 @@ static void update_index_threaded (CONTEXT *ctx, int check, int oldcount)
 	  ;
 	mutt_uncollapse_thread (ctx, j->message);
       }
-      mutt_set_virtual (ctx);
+      mutt_set_virtual_msg_num (ctx);
     }
     else if (oldcount)
     {
       for (j = 0; j < ctx->msgcount - oldcount; j++)
         if (!ctx->pattern || save_new[j]->limited)
           mutt_uncollapse_thread (ctx, save_new[j]);
-      mutt_set_virtual (ctx);
+      mutt_set_virtual_msg_num (ctx);
     }
   }
 

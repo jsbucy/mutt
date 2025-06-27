@@ -290,7 +290,7 @@ void mutt_update_encoding (BODY *a);
 void mutt_version (void);
 void mutt_view_attachments (HEADER *);
 void mutt_write_address_list (ADDRESS *adr, FILE *fp, int linelen, int display);
-void mutt_set_virtual (CONTEXT *);
+void mutt_set_virtual_msg_num (CONTEXT *);
 
 int mutt_add_to_rx_list (RX_LIST **list, const char *s, int flags, BUFFER *err);
 int mutt_addr_is_user (ADDRESS *);

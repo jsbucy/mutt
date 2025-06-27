@@ -345,7 +345,12 @@ M	po/ja.po
         collapsing.  Return the virtual number of the root.  Add searching
         behavior for <collapse-thread> to fix its behavior.
 
+        (MuttLisp) Renamed `mutt_set_virtual` to `mutt_set_virtual_msg_num`
+        for clarity.
+
 M	curs_main.c
+M	protos.h
+M	sort.c
 M	thread.c
 
 2023-03-25 13:07:19 -0700  Kevin McCarthy  <kevin@8t8.us> (e0e92c31)
