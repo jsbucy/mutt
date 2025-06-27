@@ -1135,10 +1135,10 @@ void mx_update_tables(CONTEXT *ctx, int committing)
 	ctx->hdrs[i] = NULL;
       }
       ctx->hdrs[j]->msgno = j;
-      if (ctx->hdrs[j]->virtual != -1)
+      if (ctx->hdrs[j]->virtual_msg_num != -1)
       {
 	ctx->v2r[ctx->vcount] = j;
-	ctx->hdrs[j]->virtual = ctx->vcount++;
+	ctx->hdrs[j]->virtual_msg_num = ctx->vcount++;
 	ctx->vsize += this_body->length + this_body->offset -
           this_body->hdr_offset + padding;
       }
@@ -1510,10 +1510,10 @@ void mx_update_context (CONTEXT *ctx, int new_messages)
     if (!ctx->pattern)
     {
       ctx->v2r[ctx->vcount] = msgno;
-      h->virtual = ctx->vcount++;
+      h->virtual_msg_num = ctx->vcount++;
     }
     else
-      h->virtual = -1;
+      h->virtual_msg_num = -1;
     h->msgno = msgno;
 
     if (h->env->supersedes)

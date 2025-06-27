@@ -934,7 +934,7 @@ typedef struct header
   int lines;			/* how many lines in the body of this message? */
   int index;			/* the absolute (unsorted) message number */
   int msgno;			/* number displayed to the user */
-  int virtual;			/* virtual message number */
+  int virtual_msg_num;			/* virtual message number */
   int score;
   ENVELOPE *env;		/* envelope information */
   BODY *content;		/* list of MIME parts */

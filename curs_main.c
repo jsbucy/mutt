@@ -245,7 +245,7 @@ void index_make_entry (char *s, size_t l, MUTTMENU *menu, int num)
 	  flag |= MUTT_FORMAT_FORCESUBJ;
 	  break;
 	}
-	else if (tmp->message->virtual >= 0)
+	else if (tmp->message->virtual_msg_num >= 0)
 	  break;
       }
       if (flag & MUTT_FORMAT_FORCESUBJ)
@@ -258,7 +258,7 @@ void index_make_entry (char *s, size_t l, MUTTMENU *menu, int num)
 	  /* ...but if a previous sibling is available, don't force it */
 	  if (reverse ? tmp->message->msgno > edgemsgno : tmp->message->msgno < edgemsgno)
 	    break;
-	  else if (tmp->message->virtual >= 0)
+	  else if (tmp->message->virtual_msg_num >= 0)
 	  {
 	    flag &= ~MUTT_FORMAT_FORCESUBJ;
 	    break;
@@ -418,9 +418,9 @@ static void update_index_threaded (CONTEXT *ctx, int check, int oldcount)
 			     MUTT_MATCH_FULL_ADDRESS,
 			     ctx, h, NULL))
       {
-        /* virtual will get properly set by mutt_set_virtual(), which
+        /* virtual_msg_num will get properly set by mutt_set_virtual(), which
          * is called by mutt_sort_headers() just below. */
-        h->virtual = 1;
+        h->virtual_msg_num = 1;
         h->limited = 1;
       }
     }
@@ -482,7 +482,7 @@ static void update_index_unthreaded (CONTEXT *ctx, int check, int oldcount)
 	BODY *this_body = ctx->hdrs[j]->content;
 
 	assert (ctx->vcount < ctx->msgcount);
-	ctx->hdrs[j]->virtual = ctx->vcount;
+	ctx->hdrs[j]->virtual_msg_num = ctx->vcount;
 	ctx->v2r[ctx->vcount] = j;
 	ctx->hdrs[j]->limited = 1;
 	ctx->vcount++;
@@ -965,21 +965,21 @@ int mutt_index_menu (void)
 	{
 	  for (j = i-1; j < Context->msgcount; j++)
 	  {
-	    if (Context->hdrs[j]->virtual != -1)
+	    if (Context->hdrs[j]->virtual_msg_num != -1)
 	      break;
 	  }
 	  if (j >= Context->msgcount)
 	  {
 	    for (j = i-2; j >= 0; j--)
 	    {
-	      if (Context->hdrs[j]->virtual != -1)
+	      if (Context->hdrs[j]->virtual_msg_num != -1)
 		break;
 	    }
 	  }
 
 	  if (j >= 0)
 	  {
-	    menu->current = Context->hdrs[j]->virtual;
+	    menu->current = Context->hdrs[j]->virtual_msg_num;
 	    if (in_pager)
 	    {
 	      op = OP_DISPLAY_MESSAGE;
@@ -1489,7 +1489,7 @@ int mutt_index_menu (void)
 	if ((Sort & SORT_MASK) == SORT_THREADS && CURHDR->collapsed)
 	{
 	  mutt_uncollapse_thread (Context, CURHDR);
-	  mutt_set_virtual (Context);
+	  mutt_set_virtual_msg_num (Context);
 	  if (option (OPTUNCOLLAPSEJUMP))
 	    menu->current = mutt_thread_next_unread (Context, CURHDR);
 	}
@@ -1556,7 +1556,7 @@ int mutt_index_menu (void)
 
 	    mutt_break_thread (CURHDR);
 	    mutt_sort_headers (Context, 1);
-	    menu->current = oldcur->virtual;
+	    menu->current = oldcur->virtual_msg_num;
 	  }
 
 	  Context->changed = 1;
@@ -1597,7 +1597,7 @@ int mutt_index_menu (void)
 				 Context))
 	  {
 	    mutt_sort_headers (Context, 1);
-	    menu->current = oldcur->virtual;
+	    menu->current = oldcur->virtual_msg_num;
 
 	    Context->changed = 1;
 	    mutt_message _("Threads linked");
@@ -2077,7 +2077,7 @@ int mutt_index_menu (void)
            * single thread to position on the first (not root) message
            * in the thread */
 	  menu->current = mutt_uncollapse_thread (Context, CURHDR);
-	  mutt_set_virtual (Context);
+	  mutt_set_virtual_msg_num (Context);
 	  if (option (OPTUNCOLLAPSEJUMP))
 	    menu->current = mutt_thread_next_unread (Context, CURHDR);
 	}
@@ -2085,12 +2085,12 @@ int mutt_index_menu (void)
 	{
 	  HEADER *base;
 	  int final;
-          /* This also returns the *old* virtual index of the root, but now
+          /* This also returns the *old* virtual_msg_num index of the root, but now
            * we have to find the new position of the root, which isn't
            * the same for sort=reverse-threads. */
           final = mutt_collapse_thread (Context, CURHDR);
 	  base = Context->hdrs[Context->v2r[final]];
-	  mutt_set_virtual (Context);
+	  mutt_set_virtual_msg_num (Context);
 	  for (j = 0; j < Context->vcount; j++)
 	  {
 	    if (Context->hdrs[Context->v2r[j]]->index == base->index)
@@ -2130,7 +2130,7 @@ int mutt_index_menu (void)
 	  else if (option (OPTCOLLAPSEUNREAD) || !UNREAD (CURHDR))
 	    final = mutt_collapse_thread (Context, CURHDR);
 	  else
-	    final = CURHDR->virtual;
+	    final = CURHDR->virtual_msg_num;
 
 	  base = Context->hdrs[Context->v2r[final]];
 
@@ -2152,7 +2152,7 @@ int mutt_index_menu (void)
 	    top = top->next;
 	  }
 
-	  mutt_set_virtual (Context);
+	  mutt_set_virtual_msg_num (Context);
 	  for (j = 0; j < Context->vcount; j++)
 	  {
 	    if (Context->hdrs[Context->v2r[j]]->index == base->index)

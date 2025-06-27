@@ -1927,7 +1927,7 @@ int mutt_pattern_func (int op, char *prompt)
       }
       mutt_progress_update (&progress, i, -1);
       /* new limit pattern implicitly uncollapses all threads */
-      Context->hdrs[i]->virtual = -1;
+      Context->hdrs[i]->virtual_msg_num = -1;
       Context->hdrs[i]->limited = 0;
       Context->hdrs[i]->collapsed = 0;
       Context->hdrs[i]->num_hidden = 0;
@@ -1935,7 +1935,7 @@ int mutt_pattern_func (int op, char *prompt)
       {
 	BODY *this_body = Context->hdrs[i]->content;
 
-	Context->hdrs[i]->virtual = Context->vcount;
+	Context->hdrs[i]->virtual_msg_num = Context->vcount;
 	Context->hdrs[i]->limited = 1;
 	Context->v2r[Context->vcount] = i;
 	Context->vcount++;
